@@ -13,6 +13,7 @@ from get_org_business_list import get_org_business_list  # 导入新函数
 from get_schooltype_dict_tree import get_schooltype_dict_tree
 from get_offline_ad_source_dict_tree import get_offline_ad_source_dict_tree  # 导入新函数
 from get_relation_dict_tree import get_relation_dict_tree 
+from get_leads_status_dict_tree import get_leads_status_dict_tree
 
 app = FastAPI()
 
@@ -120,4 +121,13 @@ async def api_get_relation_dict_tree() -> Dict[str, Any]:
     if not token:
         return {"status_code": 500, "response": {"error": "获取token失败"}}
     result = get_relation_dict_tree(token)
+    return result
+
+
+@app.get("/get_leads_status_dict_tree/")
+async def api_get_leads_status_dict_tree() -> Dict[str, Any]:
+    token = get_token()
+    if not token:
+        return {"status_code": 500, "response": {"error": "获取token失败"}}
+    result = get_leads_status_dict_tree(token)
     return result
