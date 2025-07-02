@@ -9,6 +9,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from search_school import CRMRequestBuilder, get_token
 from get_dict_tree import get_dict_tree
 from org_campus_list import get_org_campus_list  # 导入新函数
+from get_org_business_list import get_org_business_list  # 导入新函数
 
 app = FastAPI()
 
@@ -79,4 +80,13 @@ async def get_dict_tree_api() -> Dict[str, Any]:
 @app.get("/get_org_campus_list/")
 async def api_get_org_campus_list() -> Dict[str, Any]:
     result = get_org_campus_list()
+    return result
+
+
+@app.get("/get_org_business_list/")
+async def api_get_org_business_list() -> Dict[str, Any]:
+    token = get_token()
+    if not token:
+        return {"status_code": 500, "response": {"error": "获取token失败"}}
+    result = get_org_business_list(token)
     return result
