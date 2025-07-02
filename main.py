@@ -4,9 +4,9 @@ import os
 from typing import Dict, Any
 import json
 
-# 将search_school.py所在目录添加到系统路径
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from save_data import CRMRequestBuilder, get_token
+from search_school import CRMRequestBuilder, get_token
+from get_dict_tree import get_dict_tree
 
 app = FastAPI()
 
@@ -60,3 +60,11 @@ async def save_clue(data: Dict[str, Any]) -> Dict[str, Any]:
 
     status_code, content = crm_builder.make_request(url, data, token, "4645a321f95b4bce992685253bf01147")
     return {"status_code": status_code, "response": content}
+
+@app.get("/get_dict_tree/")
+async def get_dict_tree_api() -> Dict[str, Any]:
+    token = get_token()
+    if not token:
+        return {"status_code": 500, "response": {"error": "获取token失败"}}
+    result = get_dict_tree(token)
+    return result
