@@ -1,3 +1,4 @@
+# 查学校
 import json
 import hashlib
 import uuid

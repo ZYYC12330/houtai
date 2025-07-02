@@ -1,4 +1,5 @@
 # org_campus_list.py
+# 获取校区列表
 import requests
 import uuid
 import time
