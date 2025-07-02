@@ -1,4 +1,3 @@
-# main.py
 from fastapi import FastAPI
 import sys
 import os
@@ -7,7 +6,7 @@ import json
 
 # 将search_school.py所在目录添加到系统路径
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from search_school import CRMRequestBuilder, get_token
+from save_data import CRMRequestBuilder, get_token
 
 app = FastAPI()
 
@@ -49,4 +48,15 @@ async def get_clue(mobile: str) -> Dict[str, Any]:
     }
 
     status_code, content = crm_builder.make_request(url, request_params, token, "4645a321f95b4bce992685253bf01147")
+    return {"status_code": status_code, "response": content}
+
+@app.post("/save_clue/")
+async def save_clue(data: Dict[str, Any]) -> Dict[str, Any]:
+    crm_builder = CRMRequestBuilder()
+    url = "https://testcrm.xhd.cn/api/clue/save"
+    token = get_token()
+    if not token:
+        return {"status_code": 500, "response": {"error": "获取token失败"}}
+
+    status_code, content = crm_builder.make_request(url, data, token, "4645a321f95b4bce992685253bf01147")
     return {"status_code": status_code, "response": content}
