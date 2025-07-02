@@ -1,3 +1,4 @@
+# main.py
 from fastapi import FastAPI
 import sys
 import os
@@ -7,8 +8,10 @@ import json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from search_school import CRMRequestBuilder, get_token
 from get_dict_tree import get_dict_tree
+from org_campus_list import get_org_campus_list  # 导入新函数
 
 app = FastAPI()
+
 
 @app.get("/search_school/")
 async def search_school(school_name: str) -> Dict[str, Any]:
@@ -28,6 +31,7 @@ async def search_school(school_name: str) -> Dict[str, Any]:
 
     status_code, content = crm_builder.make_request(url, request_params, token, "4645a321f95b4bce992685253bf01147")
     return {"status_code": status_code, "response": content}
+
 
 @app.get("/get_clue/")
 async def get_clue(mobile: str) -> Dict[str, Any]:
@@ -50,6 +54,7 @@ async def get_clue(mobile: str) -> Dict[str, Any]:
     status_code, content = crm_builder.make_request(url, request_params, token, "4645a321f95b4bce992685253bf01147")
     return {"status_code": status_code, "response": content}
 
+
 @app.post("/save_clue/")
 async def save_clue(data: Dict[str, Any]) -> Dict[str, Any]:
     crm_builder = CRMRequestBuilder()
@@ -61,10 +66,17 @@ async def save_clue(data: Dict[str, Any]) -> Dict[str, Any]:
     status_code, content = crm_builder.make_request(url, data, token, "4645a321f95b4bce992685253bf01147")
     return {"status_code": status_code, "response": content}
 
+
 @app.get("/get_dict_tree/")
 async def get_dict_tree_api() -> Dict[str, Any]:
     token = get_token()
     if not token:
         return {"status_code": 500, "response": {"error": "获取token失败"}}
     result = get_dict_tree(token)
+    return result
+
+
+@app.get("/get_org_campus_list/")
+async def api_get_org_campus_list() -> Dict[str, Any]:
+    result = get_org_campus_list()
     return result
