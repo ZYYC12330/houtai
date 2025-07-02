@@ -10,6 +10,7 @@ from search_school import CRMRequestBuilder, get_token
 from get_dict_tree import get_dict_tree
 from org_campus_list import get_org_campus_list  # 导入新函数
 from get_org_business_list import get_org_business_list  # 导入新函数
+from get_schooltype_dict_tree import get_schooltype_dict_tree
 
 app = FastAPI()
 
@@ -89,4 +90,13 @@ async def api_get_org_business_list() -> Dict[str, Any]:
     if not token:
         return {"status_code": 500, "response": {"error": "获取token失败"}}
     result = get_org_business_list(token)
+    return result
+
+
+@app.get("/get_schooltype_dict_tree/")
+async def api_get_schooltype_dict_tree() -> Dict[str, Any]:
+    token = get_token()
+    if not token:
+        return {"status_code": 500, "response": {"error": "获取token失败"}}
+    result = get_schooltype_dict_tree(token)
     return result
