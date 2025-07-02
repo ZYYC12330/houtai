@@ -16,6 +16,7 @@ from get_relation_dict_tree import get_relation_dict_tree
 from get_leads_status_dict_tree import get_leads_status_dict_tree
 from get_org_campus_list_new import get_org_campus_list_new  # 导入新函数
 from get_user_query import get_user_query  # 导入新函数
+from get_reseller_choose import get_reseller_choose  # 导入新函数
 
 
 
@@ -148,4 +149,9 @@ async def api_get_user_query() -> Dict[str, Any]:
     if not token:
         return {"status_code": 500, "response": {"error": "获取token失败"}}
     result = get_user_query(token)
+    return result
+
+@app.get("/get_reseller_choose/")
+async def api_get_reseller_choose() -> Dict[str, Any]:
+    result = get_reseller_choose()
     return result
