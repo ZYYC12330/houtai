@@ -13,7 +13,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-app.include_router(get_dict_tree.router)
+app.include_router(get_dict_tree.router) # DONE
 app.include_router(get_org_campus_list.router)
 app.include_router(get_org_business_list.router)
 app.include_router(get_schooltype_dict_tree.router)
@@ -22,10 +22,10 @@ app.include_router(get_relation_dict_tree.router)
 app.include_router(get_leads_status_dict_tree.router)
 app.include_router(get_user_query.router)
 app.include_router(get_reseller_choose.router)
-app.include_router(save_clue.router)
-app.include_router(get_clue.router)
+app.include_router(save_clue.router) # TODO
+app.include_router(get_clue.router) # DONE
 
-app.include_router(search_school.router) #DONE
+app.include_router(search_school.router) # DONE
 
 
 
