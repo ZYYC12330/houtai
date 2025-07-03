@@ -10,7 +10,7 @@ from router.crm_utils import CRMRequestBuilder, get_token
 
 router = APIRouter()
 
-@router.get("/search_school/")
+@router.get("/get_org_campus_list/")
 async def get_org_campus_list():
     crm_builder = CRMRequestBuilder()
     url = "https://testcrm.xhd.cn/api/common/org_campus/list"

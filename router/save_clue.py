@@ -10,8 +10,8 @@ from router.crm_utils import CRMRequestBuilder, get_token
 
 router = APIRouter()
 
-@router.get("/save_data/")
-async def save_data():
+@router.post("/save_clue/")
+async def save_clue():
     crm_builder = CRMRequestBuilder()
     url = "https://testcrm.xhd.cn/api/clue/save"
     token = get_token()
@@ -19,7 +19,8 @@ async def save_data():
         print("状态码: 500")
         print('响应内容: {"error": "获取token失败"}')
         return
-    
+
+    # sample 
     request_data = {
         "orgids": "a7f0cd9c706c4673ad76bd36dc1f3249",
         "names": "你好",

@@ -1,13 +1,17 @@
 # main.py
 from fastapi import FastAPI
-from router import get_dict_tree, get_org_campus_list, get_org_business_list, get_schooltype_dict_tree, get_offline_ad_source_dict_tree, get_relation_dict_tree, get_leads_status_dict_tree, get_org_campus_list_new, get_user_query, get_reseller_choose, search_school
+from router import save_clue, get_dict_tree, get_org_campus_list, get_org_business_list, get_schooltype_dict_tree, get_offline_ad_source_dict_tree, get_relation_dict_tree, get_leads_status_dict_tree, get_user_query, get_reseller_choose, search_school
 import sys
 import os
 
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-app = FastAPI()
+app = FastAPI(
+    title="CRM数据合并服务",
+    description="用于管理和合并CRM相关数据的API服务",
+    version="1.0.0"
+)
 
 app.include_router(get_dict_tree.router)
 app.include_router(get_org_campus_list.router)
@@ -16,9 +20,9 @@ app.include_router(get_schooltype_dict_tree.router)
 app.include_router(get_offline_ad_source_dict_tree.router)
 app.include_router(get_relation_dict_tree.router)
 app.include_router(get_leads_status_dict_tree.router)
-app.include_router(get_org_campus_list_new.router)
 app.include_router(get_user_query.router)
 app.include_router(get_reseller_choose.router)
+app.include_router(save_clue.router)
 
 app.include_router(search_school.router)
 
@@ -42,7 +46,7 @@ app.include_router(search_school.router)
 #     crm_builder = CRMRequestBuilder()
 #     url = "https://testcrm.xhd.cn/api/clue/globle"
 #     request_params = {
-#         "customername": "",
+#         "customername": "",set http_proxy=http://127.0.0.1:7890 & set https_proxy=http://127.0.0.1:7890
 #         "mobile": mobile,
 #         "qq": "",
 #         "wechat": "",
