@@ -1,6 +1,6 @@
 # main.py
 from fastapi import FastAPI
-from router import save_clue, get_dict_tree, get_org_campus_list, get_org_business_list, get_schooltype_dict_tree, get_offline_ad_source_dict_tree, get_relation_dict_tree, get_leads_status_dict_tree, get_user_query, get_reseller_choose, search_school
+from router import save_clue, get_clue, get_dict_tree, get_org_campus_list, get_org_business_list, get_schooltype_dict_tree, get_offline_ad_source_dict_tree, get_relation_dict_tree, get_leads_status_dict_tree, get_user_query, get_reseller_choose, search_school
 import sys
 import os
 
@@ -23,8 +23,9 @@ app.include_router(get_leads_status_dict_tree.router)
 app.include_router(get_user_query.router)
 app.include_router(get_reseller_choose.router)
 app.include_router(save_clue.router)
+app.include_router(get_clue.router)
 
-app.include_router(search_school.router)
+app.include_router(search_school.router) #DONE
 
 
 
