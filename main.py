@@ -14,7 +14,7 @@ app = FastAPI(
 )
 
 app.include_router(get_dict_tree.router) # DONE
-app.include_router(get_org_campus_list.router)
+app.include_router(get_org_campus_list.router) # DONE
 app.include_router(get_org_business_list.router)
 app.include_router(get_schooltype_dict_tree.router)
 app.include_router(get_offline_ad_source_dict_tree.router)

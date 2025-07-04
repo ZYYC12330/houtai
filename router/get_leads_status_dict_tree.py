@@ -2,13 +2,13 @@
 # 获取线索状态字典树
 import requests
 from typing import Dict, Any
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 from router.crm_utils import CRMRequestBuilder, get_token
 router = APIRouter()
 
 @router.get("/get_leads_status_dict_tree/")
 
-async def get_leads_status_dict_tree(token: str, user_ids: str = "4645a321f95b4bce992685253bf01147") -> Dict[str, Any]:
+async def get_leads_status_dict_tree(token: str = Depends(get_token), user_ids: str = "4645a321f95b4bce992685253bf01147") -> Dict[str, Any]:
     url = "https://testcrm.xhd.cn/api/common/dict/tree?numbers=leadsstatus&orgids=a7f0cd9c706c4673ad76bd36dc1f3249"
     headers = {
         "accept": "application/json, text/plain, */*",
