@@ -1,9 +1,14 @@
 from typing import Dict, Any
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Request
 from router.crm_utils import CRMRequestBuilder, get_token
+import httpx
+import logging
+import json
+from utils import extract_fields_get_market_activity, extract_fields, extract_fields_get_user_query, extract_fields_get_org_business_list, extract_fields_get_user_query, extract_fields_get_reseller_choose
 
 router = APIRouter()
-@app.get("/extract_all_fields/", tags=["tools"])
+
+@router.get("/extract_all_fields/", tags=["tools"])
 async def extract_all_fields(request: Request):
     """
     针对每个API接口自定义处理规则，提取'ids'、'names'、'numbers'等字段。
