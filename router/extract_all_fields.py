@@ -4,7 +4,10 @@ from router.crm_utils import CRMRequestBuilder, get_token
 import httpx
 import logging
 import json
-from utils import extract_fields_get_market_activity, extract_fields, extract_fields_get_user_query, extract_fields_get_org_business_list, extract_fields_get_user_query, extract_fields_get_reseller_choose
+from utils.rule import extract_fields_get_market_activity, extract_fields, extract_fields_get_user_query, extract_fields_get_org_business_list, extract_fields_get_user_query, extract_fields_get_reseller_choose
+from utils.flatten_json import flatten_json_file
+from utils.map_input_data import map_input_data
+
 
 router = APIRouter()
 
@@ -197,21 +200,10 @@ async def extract_all_fields(request: Request):
             results.append({"path": "/get_market_activity/", "error": str(e)})
 
 
-
-
-
-
-
-
-
-
-
-
-
         logging.info(f"接口调用结果: {results}")
 
         # 写入json文件
-        with open("output.json", "w", encoding="utf-8") as f:
+        with open("output_raw_data.json", "w", encoding="utf-8") as f:
             json.dump({"results": results}, f, ensure_ascii=False, indent=2)
             print("写入完成😅")
 
@@ -222,5 +214,13 @@ async def extract_all_fields(request: Request):
                 print(msg)
         else:
             print("所有接口的 fields 都不为空！")
+
+        flatten_json_file('output_raw_data.json', 'flattened_data.json')
+
+        map_input_data('sample_input.json', 'flattened_data.json', './data/matched_data.json')
+
+
+
+
 
         return {"results": results}

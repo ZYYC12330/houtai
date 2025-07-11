@@ -200,3 +200,8 @@ def extract_fields_get_market_activity(obj, fields=("ids", "themename"), collect
         for item in obj:
             extract_fields(item, fields, collected)
     return collected
+
+
+
+
+
