@@ -76,7 +76,7 @@ def extract_fields_get_org_business_list(obj, fields=("ids", "businessids", "bus
 #         "roleids": "",
 #         "super": false
 #       },
-def extract_fields_get_user_query(obj, fields=("username", "names", "mobile", "email"), collected=None):
+def extract_fields_get_user_query(obj, fields=("usertype", "names", "ids"), collected=None):
     if collected is None:
         collected = []
     if isinstance(obj, dict):
@@ -128,6 +128,64 @@ def extract_fields_get_user_query(obj, fields=("username", "names", "mobile", "e
 #           /get_reseller_choose/
 
 def extract_fields_get_reseller_choose(obj, fields=("ids", "names"), collected=None):
+    if collected is None:
+        collected = []
+    if isinstance(obj, dict):
+        # 如果当前dict有全部目标字段，则收集
+        if all(f in obj for f in fields):
+            collected.append({f: obj[f] for f in fields})
+        # 递归遍历所有value
+        for v in obj.values():
+            if isinstance(v, (dict, list)):
+                extract_fields(v, fields, collected)
+    elif isinstance(obj, list):
+        for item in obj:
+            extract_fields(item, fields, collected)
+    return collected
+
+
+#  {
+#                 "ids": "e0aa96b06ee14ebfac1aef0639eb397c",
+#                 "version": 0,
+#                 "themename": "上大嘉定路演",
+#                 "status": "0",
+#                 "activitytype": null,
+#                 "place": "上大嘉定第一食堂门口",
+#                 "startdate": null,
+#                 "enddate": null,
+#                 "principaluserids": "0bef9f40c6f04a88bd20b01b87c82dcd",
+#                 "expectcost": null,
+#                 "expectincome": null,
+#                 "realcost": null,
+#                 "orgids": "a7f0cd9c706c4673ad76bd36dc1f3249",
+#                 "createuserids": "0bef9f40c6f04a88bd20b01b87c82dcd",
+#                 "createtime": "2017-11-01 17:09:11",
+#                 "updateuserids": null,
+#                 "updattime": null,
+#                 "content": null,
+#                 "speakeruserids": null,
+#                 "belong": "otheractivity",
+#                 "predictordernumber": "",
+#                 "orgnames": null,
+#                 "principalusernames": null,
+#                 "createusernames": null,
+#                 "updateusernames": null,
+#                 "isUse": null,
+#                 "activityExtras": null,
+#                 "contentImgList": null,
+#                 "cooperationImgList": null,
+#                 "activityConsultantids": null,
+#                 "targetproperties": null,
+#                 "visitadvice": null,
+#                 "updateType": null,
+#                 "activitytypeStr": null,
+#                 "belongStr": null,
+#                 "activityConsultants": null
+#             },
+
+
+
+def extract_fields_get_market_activity(obj, fields=("ids", "themename"), collected=None):
     if collected is None:
         collected = []
     if isinstance(obj, dict):

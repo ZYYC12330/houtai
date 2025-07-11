@@ -1,14 +1,13 @@
 # main.py
 from fastapi import FastAPI, Request
-from router import save_clue, get_clue, get_dict_tree, get_org_campus_list, get_org_business_list, get_schooltype_dict_tree, get_offline_ad_source_dict_tree, get_relation_dict_tree, get_leads_status_dict_tree, get_user_query, get_reseller_choose, search_school
+from router import get_market_activity, get_market_person, save_clue, get_clue, get_dict_tree, get_org_campus_list, get_org_business_list, get_schooltype_dict_tree, get_offline_ad_source_dict_tree, get_relation_dict_tree, get_leads_status_dict_tree, get_user_query, get_reseller_choose, search_school,validate_mobile,import_clue,get_import_record
 import sys
 import os
 import httpx
 from fastapi.routing import APIRoute
 import logging
 import json
-import httpx
-from utils import extract_fields, extract_fields_get_user_query, extract_fields_get_org_business_list, extract_fields_get_user_query, extract_fields_get_reseller_choose
+from utils import extract_fields_get_market_activity, extract_fields, extract_fields_get_user_query, extract_fields_get_org_business_list, extract_fields_get_user_query, extract_fields_get_reseller_choose
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -29,9 +28,12 @@ app.include_router(get_user_query.router)
 app.include_router(get_reseller_choose.router)
 app.include_router(get_clue.router) # DONE
 app.include_router(search_school.router) # DONE
-
-app.include_router(save_clue.router) 
-
+app.include_router(get_market_person.router) # DONE
+app.include_router(get_market_activity.router) # DONE
+app.include_router(import_clue.router)
+app.include_router(save_clue.router)
+app.include_router(validate_mobile.router)
+app.include_router(get_import_record.router)
 
 
 
@@ -44,9 +46,10 @@ async def extract_all_fields(request: Request):
     针对每个API接口自定义处理规则，提取'ids'、'names'、'numbers'等字段。
     """
 
-    base_url = str(request.base_url).rstrip("/")
+    base_url = f"https{str(request.base_url).rstrip("/").lstrip("https").lstrip("http")}"
     results = []
     empty_fields_msgs = []  # 新增：用于收集fields为空的接口信息
+    empty_response_msgs = []  # 新增：收集响应为空的接口信息
 
     async with httpx.AsyncClient() as client:
         # 1. search_school
@@ -57,7 +60,12 @@ async def extract_all_fields(request: Request):
             if not fields:
                 empty_fields_msgs.append("/search_school/ 的 fields 为空！")
             results.append({"path": "/search_school/", "fields": fields})
+        except httpx.TimeoutException:
+            results.append({"path": "/search_school/", "error": "请求超时"})
+        except httpx.ConnectError:
+            results.append({"path": "/search_school/", "error": "连接失败"})
         except Exception as e:
+            print(e)
             results.append({"path": "/search_school/", "error": str(e)})
 
         # 2. get_clue
@@ -131,6 +139,10 @@ async def extract_all_fields(request: Request):
         # 7. get_schooltype_dict_tree
         try:
             resp = await client.get(f"{base_url}/get_schooltype_dict_tree/")
+            if not resp.text.strip():
+                empty_response_msgs.append("/search_school/ 返回空字符串！")
+                print("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
+                
             data = resp.json()
             fields = extract_fields(data)
             if not fields:
@@ -193,6 +205,38 @@ async def extract_all_fields(request: Request):
             results.append({"path": "/get_reseller_choose/", "fields": fields})
         except Exception as e:
             results.append({"path": "/get_reseller_choose/", "error": str(e)})
+
+        # 13. get_market_person
+        try:
+            resp = await client.get(f"{base_url}/get_market_person/")
+            data = resp.json()
+            fields = extract_fields_get_user_query(data)
+            if not fields:
+                empty_fields_msgs.append("/get_market_person/ 的 fields 为空！")
+            results.append({"path": "/get_market_person/", "fields": fields})
+        except Exception as e:
+            results.append({"path": "/get_market_person/", "error": str(e)})
+
+        # 12. get_market_activity
+        try:
+            resp = await client.get(f"{base_url}/get_market_activity/")
+            data = resp.json()
+            fields = extract_fields_get_market_activity(data)
+            if not fields:
+                empty_fields_msgs.append("/get_market_activity/ 的 fields 为空！")
+            results.append({"path": "/get_market_activity/", "fields": fields})
+        except Exception as e:
+            results.append({"path": "/get_market_activity/", "error": str(e)})
+
+
+
+
+
+
+
+
+
+
 
 
 

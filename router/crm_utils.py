@@ -97,3 +97,30 @@ class CRMRequestBuilder:
             return response.status_code, response.json() if response.headers.get('content-type', '').startswith('application/json') else response.text
         except Exception as e:
             return 500, {"error": str(e)} 
+        
+    def make_post_request(self, url: str, data: Dict[str, Any], token: str, platform_userids: str, files: dict = None):
+        timestamp = str(int(time.time() * 1000))
+        nonce = str(uuid.uuid4())
+        sign = self.generate_signature(data, timestamp, nonce)
+        # 注意：content-type 不能写死为 application/json，requests 会自动处理
+        headers = {
+            "accept": "*/*",
+            "accept-language": "zh-CN,zh;q=0.9,en-GB;q=0.8,en-US;q=0.7,en;q=0.6,zh-TW;q=0.5",
+            "authorization": f"Bearer {token}",
+            "crm-version": self.crm_version,
+            "origin": "https://testcrm.xhd.cn",
+            "platform-orgshow": "0",
+            "platform-userids": platform_userids,
+            "priority": "u=1, i",
+            "referer": "https://testcrm.xhd.cn/",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0",
+            "x-auth-app": self.app_id,
+            "x-auth-nonce": nonce,
+            "x-auth-sign": sign,
+            "x-auth-timestamp": timestamp,
+        }
+        try:
+            response = requests.post(url, data=data, files=files, headers=headers, timeout=30)
+            return response.status_code, response.json() if response.headers.get('content-type', '').startswith('application/json') else response.text
+        except Exception as e:
+            return 500, {"error": str(e)} 
